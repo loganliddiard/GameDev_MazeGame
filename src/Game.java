@@ -82,6 +82,7 @@ public class Game {
             if(!keypress){
                 player.move_player_up();
                 keypress = true;
+                maze.update_shortest_path(player.getRow(),player.getCol());
 
             }
 
@@ -90,6 +91,7 @@ public class Game {
             if(!keypress){
                 player.move_player_down();
                 keypress = true;
+                maze.update_shortest_path(player.getRow(),player.getCol());
 
             }
 
@@ -98,6 +100,7 @@ public class Game {
             if(!keypress){
                 player.move_player_left();
                 keypress = true;
+                maze.update_shortest_path(player.getRow(),player.getCol());
             }
         }
         else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
@@ -105,6 +108,7 @@ public class Game {
             if(!keypress){
                 player.move_player_right();
                 keypress = true;
+                maze.update_shortest_path(player.getRow(),player.getCol());
             }
         }
         else keypress = false;

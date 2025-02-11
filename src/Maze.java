@@ -28,7 +28,8 @@ public class Maze {
         maze[size - 1][size - 1].set_isGoal();
 
         generateMaze();
-        shortest_path();
+        shortest_path(0,0);
+        add_scores();
         //isAllConnected();
     }
 
@@ -100,12 +101,20 @@ public class Maze {
 
     }
 
-    private void shortest_path() {
+    private void shortest_path(int given_row, int given_col) {
+        //reset previous shortest path
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                maze[row][col].set_shortestPath(false);
+            }
+        }
+
+
         Queue<MazeCell> q = new LinkedList<>();
         Map<MazeCell, MazeCell> predecessors = new HashMap<>(); // Track predecessors
         List<MazeCell> visited = new LinkedList<>();
 
-        MazeCell start = maze[0][0];
+        MazeCell start = maze[given_row][given_col];
         q.add(start);
         visited.add(start);
         predecessors.put(start, null); // Start has no predecessor
@@ -145,7 +154,7 @@ public class Maze {
     private void markShortestPath(Map<MazeCell, MazeCell> predecessors, MazeCell goal) {
         MazeCell curr = goal;
         while (curr != null) {
-            curr.set_shortestPath(); // Assuming a method exists to visually mark the shortest path
+            curr.set_shortestPath(true); // Assuming a method exists to visually mark the shortest path
             curr = predecessors.get(curr);
         }
     }
@@ -169,8 +178,30 @@ public class Maze {
 
     }
 
+    private void add_scores(){
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if(maze[row][col].get_shortestPath()) maze[row][col].set_points(5);
+                else {
+                    if(maze[row][col].getTop() != null && maze[row][col].getTop().get_shortestPath()){maze[row][col].set_points(-1);}
+                    else if(maze[row][col].getBottom() != null && maze[row][col].getBottom().get_shortestPath()){maze[row][col].set_points(-1);}
+                    else if(maze[row][col].getLeft() != null && maze[row][col].getLeft().get_shortestPath()){maze[row][col].set_points(-1);}
+                    else if(maze[row][col].getRight() != null && maze[row][col].getRight().get_shortestPath()){maze[row][col].set_points(-1);}
+                    else maze[row][col].set_points(-2);
+                }
+            }
+        }
+    }
+
+
     public MazeCell[][] getMaze(){
 
         return maze;
+    }
+
+    public void update_shortest_path(int row, int col){
+        shortest_path(row,col);
+
     }
 }

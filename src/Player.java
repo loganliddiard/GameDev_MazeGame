@@ -66,6 +66,8 @@ public class Player {
             current_cell.setVisited();
             col -=1;
             current_cell = maze[row][col];
+            if (!current_cell.get_visited()) score += current_cell.get_points();
+            System.out.println("POINTS GAINED"+current_cell.get_points());
             check_moves();
         }
     }
@@ -74,6 +76,8 @@ public class Player {
             current_cell.setVisited();
             col += 1;
             current_cell = maze[row][col];
+            if (!current_cell.get_visited()) score += current_cell.get_points();
+            System.out.println("POINTS GAINED"+current_cell.get_points());
             check_moves();
         }
     }
@@ -82,6 +86,8 @@ public class Player {
             current_cell.setVisited();
             row -=1;
             current_cell = maze[row][col];
+            if (!current_cell.get_visited()) score += current_cell.get_points();
+
             check_moves();
         }
     }

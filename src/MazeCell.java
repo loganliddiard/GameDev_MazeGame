@@ -52,8 +52,8 @@ public class MazeCell {
     public void set_isGoal(){
         this.isGoal = true;
     }
-    public void set_shortestPath(){
-        this.is_shortestPath = true;
+    public void set_shortestPath(boolean value){
+        this.is_shortestPath = value;
     }
     public void set_points(int points){
         this.points_val = points;
