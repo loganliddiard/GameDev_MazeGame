@@ -6,7 +6,6 @@ public class Player {
 
     private int col;
     private int row;
-
     private boolean go_left;
     private boolean go_right;
     private boolean go_up;
@@ -39,25 +38,22 @@ public class Player {
         go_up = false;
         go_down = false;
 
-        System.out.println();
-
         if(current_cell.getLeft() != null){
             go_left = true;
-            System.out.println("CAN GO LEFT <");
+
 
         }
         if(current_cell.getRight() != null){
             go_right = true;
-            System.out.println("CAN GO RIGHT >");
+
 
         }
         if(current_cell.getTop() != null){
             go_up = true;
-            System.out.println("CAN GO UP ^");
+
         }
         if(current_cell.getBottom() != null){
             go_down = true;
-            System.out.println("CAN GO DOWN v");
         }
 
 
@@ -66,6 +62,7 @@ public class Player {
 
     public void move_player_left(){
         if(go_left){
+            current_cell.setVisited();
             col -=1;
             current_cell = maze[row][col];
             check_moves();
@@ -73,6 +70,7 @@ public class Player {
     }
     public void move_player_right() {
         if (go_right) {
+            current_cell.setVisited();
             col += 1;
             current_cell = maze[row][col];
             check_moves();
@@ -80,6 +78,7 @@ public class Player {
     }
     public void move_player_up(){
         if(go_up){
+            current_cell.setVisited();
             row -=1;
             current_cell = maze[row][col];
             check_moves();
@@ -87,6 +86,7 @@ public class Player {
     }
     public void move_player_down(){
         if(go_down){
+            current_cell.setVisited();
             row +=1;
             current_cell = maze[row][col];
             check_moves();

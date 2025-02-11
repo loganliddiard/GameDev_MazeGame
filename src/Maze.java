@@ -95,6 +95,13 @@ public class Maze {
 
     }
 
+    private void shortest_path(){
+
+        Queue<Integer> q = new LinkedList<>();
+
+
+    }
+
     private ArrayList<MazeCell> get_valid_cells(MazeCell current){
 
         //create a list of valid cells that are inside maze

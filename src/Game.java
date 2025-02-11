@@ -1,4 +1,6 @@
 import edu.usu.graphics.*;
+import org.joml.primitives.Circled;
+import org.joml.primitives.Circlef;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -7,7 +9,10 @@ public class Game {
 
     private Maze maze;
     private Player player;
+    private int score;
+    private long time;
     private float cell_size;
+    private boolean keypress;
     public Game(Graphics2D graphics) {
         this.graphics = graphics;
     }
@@ -15,7 +20,7 @@ public class Game {
 
 
     public void initialize() {
-
+        boolean keypress = false;
     }
 
     public void shutdown() {
@@ -75,21 +80,35 @@ public class Game {
 
         // Movement handeler
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-            player.move_player_up();
+            if(!keypress){
+                player.move_player_up();
+                keypress = true;
+
+            }
 
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-            player.move_player_down();
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+            if(!keypress){
+                player.move_player_down();
+                keypress = true;
+
+            }
 
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-            player.move_player_left();
-
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+            if(!keypress){
+                player.move_player_left();
+                keypress = true;
+            }
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-            player.move_player_right();
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 
+            if(!keypress){
+                player.move_player_right();
+                keypress = true;
+            }
         }
+        else keypress = false;
 
     }
 
@@ -100,12 +119,12 @@ public class Game {
     private void render(double elapsedTime) {
         graphics.begin();
 
-        Rectangle myBox = new Rectangle(-0.525f, -0.525f, 1.05f, 1.05f);
+        Rectangle myBox = new Rectangle(-0.525f, -0.525f, 1.05f, 1.05f,-1);
+        Texture background = new Texture("resources/images/Dino_background.2.jpg");
 
         final float MAZE_CORNER_LEFT = -0.5f;
         final float MAZE_CORNER_TOP = -0.5f;
-        this.graphics.draw(myBox,Color.PURPLE);
-
+        this.graphics.draw(background,myBox,Color.WHITE);
         if(maze != null){
             for (var row : maze.getMaze()) {
                 for (var cell : row) {
@@ -147,6 +166,19 @@ public class Game {
         if (cell.getRight() == null) {
             Rectangle r = new Rectangle(left + CELL_SIZE, top, WALL_THICKNESS, CELL_SIZE);
             this.graphics.draw(r, Color.WHITE);
+        }
+
+        if (cell.get_visited()){
+            Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
+            this.graphics.draw(r, Color.YELLOW);
+
+
+        }
+        if (cell.get_visited()){
+            Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
+            this.graphics.draw(r, Color.YELLOW);
+
+
         }
     }
 }
