@@ -9,7 +9,6 @@ public class Game {
 
     private Maze maze;
     private Player player;
-    private int score;
     private long time;
     private float cell_size;
     private boolean keypress;
@@ -153,28 +152,28 @@ public class Game {
 
         if (cell.getTop() == null) {
             Rectangle r = new Rectangle(left, top, CELL_SIZE, WALL_THICKNESS);
-            this.graphics.draw(r, Color.WHITE);
+            this.graphics.draw(r, Color.BLACK);
         }
         if (cell.getBottom() == null) {
-            Rectangle r = new Rectangle(left, top + CELL_SIZE, CELL_SIZE, WALL_THICKNESS);
-            this.graphics.draw(r, Color.WHITE);
+            Rectangle r = new Rectangle(left, top + CELL_SIZE, CELL_SIZE+WALL_THICKNESS, WALL_THICKNESS);
+            this.graphics.draw(r, Color.BLACK);
         }
         if (cell.getLeft() == null) {
             Rectangle r = new Rectangle(left, top, WALL_THICKNESS, CELL_SIZE);
-            this.graphics.draw(r, Color.WHITE);
+            this.graphics.draw(r, Color.BLACK);
         }
         if (cell.getRight() == null) {
             Rectangle r = new Rectangle(left + CELL_SIZE, top, WALL_THICKNESS, CELL_SIZE);
-            this.graphics.draw(r, Color.WHITE);
+            this.graphics.draw(r, Color.BLACK);
         }
 
         if (cell.get_visited()){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
-            this.graphics.draw(r, Color.YELLOW);
+            this.graphics.draw(r, Color.BLACK);
 
 
         }
-        if (cell.get_visited()){
+        if (cell.get_shortestPath()){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
             this.graphics.draw(r, Color.YELLOW);
 

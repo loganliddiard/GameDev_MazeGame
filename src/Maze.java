@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 
 import java.util.LinkedList;
@@ -12,7 +14,7 @@ public class Maze {
     private int size;
     private MazeCell[][] maze;
 
-    public Maze(int size){
+    public Maze(int size) {
 
         this.size = size;
         maze = new MazeCell[size][size];
@@ -23,22 +25,25 @@ public class Maze {
         //maze[1][1].connect_left_cell(maze[1][0]);
         //maze[1][1].connect_right_cell(maze[1][2]);
 
+        maze[size - 1][size - 1].set_isGoal();
+
         generateMaze();
+        shortest_path();
         //isAllConnected();
     }
 
-    private void initializeMaze(int size){
+    private void initializeMaze(int size) {
 
         rand = new Random();
 
-        for(int row = 0; row < size; row++){
-            for(int col = 0; col < size; col++){
-                maze[row][col] = new MazeCell(row,col);
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                maze[row][col] = new MazeCell(row, col);
             }
         }
     }
 
-    private void generateMaze(){
+    private void generateMaze() {
 
         MazeCell start = maze[0][0];
 
@@ -47,7 +52,7 @@ public class Maze {
         List<MazeCell> frontier = new ArrayList<>(start_neighbor_cells);
 
 
-        while (!frontier.isEmpty()){
+        while (!frontier.isEmpty()) {
             System.out.println(frontier.size());
             MazeCell current = frontier.get(rand.nextInt(frontier.size()));
 
@@ -56,11 +61,11 @@ public class Maze {
             ArrayList<MazeCell> valid_cells = get_valid_cells(current);
             ArrayList<MazeCell> neighbors = new ArrayList<>();
 
-            for(MazeCell cell : valid_cells){
+            for (MazeCell cell : valid_cells) {
 
-                if(!cell.get_inMaze() && !frontier.contains(cell)){
+                if (!cell.get_inMaze() && !frontier.contains(cell)) {
                     frontier.add(cell);
-                }else if (cell.get_inMaze()){
+                } else if (cell.get_inMaze()) {
                     neighbors.add(cell);
                 }
             }
@@ -75,7 +80,7 @@ public class Maze {
                 //Locate cell to properly connect them
 
                 //Connect above
-                if (cell_to_connect.getRow() < current.getRow()){
+                if (cell_to_connect.getRow() < current.getRow()) {
                     current.connect_upper_cell(cell_to_connect);
                 }
                 //Connect below
@@ -95,12 +100,56 @@ public class Maze {
 
     }
 
-    private void shortest_path(){
+    private void shortest_path() {
+        Queue<MazeCell> q = new LinkedList<>();
+        Map<MazeCell, MazeCell> predecessors = new HashMap<>(); // Track predecessors
+        List<MazeCell> visited = new LinkedList<>();
 
-        Queue<Integer> q = new LinkedList<>();
+        MazeCell start = maze[0][0];
+        q.add(start);
+        visited.add(start);
+        predecessors.put(start, null); // Start has no predecessor
 
+        while (!q.isEmpty()) {
+            MazeCell curr = q.poll();
+            curr.setVisited();
 
+            if (curr.get_isGoal()) {
+                System.out.println("FOUND GOAL");
+                System.out.println(curr.getCol());
+                System.out.println(curr.getRow());
+
+                // Backtrack and mark the shortest path
+                markShortestPath(predecessors, curr);
+                break;
+            }
+
+            // Explore neighbors
+            checkAndEnqueue(curr, curr.getTop(), q, visited, predecessors);
+            checkAndEnqueue(curr, curr.getBottom(), q, visited, predecessors);
+            checkAndEnqueue(curr, curr.getRight(), q, visited, predecessors);
+            checkAndEnqueue(curr, curr.getLeft(), q, visited, predecessors);
+        }
     }
+
+    // Helper function to enqueue cells and track predecessors
+    private void checkAndEnqueue(MazeCell curr, MazeCell neighbor, Queue<MazeCell> q, List<MazeCell> visited, Map<MazeCell, MazeCell> predecessors) {
+        if (neighbor != null && !visited.contains(neighbor)) {
+            visited.add(neighbor);
+            q.add(neighbor);
+            predecessors.put(neighbor, curr); // Track where the cell came from
+        }
+    }
+
+    // Backtrack from goal to start and mark the shortest path
+    private void markShortestPath(Map<MazeCell, MazeCell> predecessors, MazeCell goal) {
+        MazeCell curr = goal;
+        while (curr != null) {
+            curr.set_shortestPath(); // Assuming a method exists to visually mark the shortest path
+            curr = predecessors.get(curr);
+        }
+    }
+
 
     private ArrayList<MazeCell> get_valid_cells(MazeCell current){
 

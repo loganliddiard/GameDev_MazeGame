@@ -11,6 +11,7 @@ public class Player {
     private boolean go_up;
     private boolean go_down;
     private float size;
+    private int score;
     private MazeCell current_cell;
     public Player(float size,MazeCell[][] maze){
         col = 1;
@@ -89,6 +90,8 @@ public class Player {
             current_cell.setVisited();
             row +=1;
             current_cell = maze[row][col];
+            if (!current_cell.get_visited()) score += current_cell.get_points();
+
             check_moves();
         }
     }

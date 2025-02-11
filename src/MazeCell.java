@@ -8,13 +8,19 @@ public class MazeCell {
     private final int row;
     private final int col;
 
+    private int points_val;
+
     private boolean visited;
     private boolean inMaze;
-
+    private boolean isGoal;
+    private boolean is_shortestPath;
     public MazeCell(int row, int col){
         this.row = row;
         this.col = col;
         inMaze = false;
+        isGoal = false;
+        is_shortestPath = false;
+        points_val = 0;
 
     }
 
@@ -43,6 +49,15 @@ public class MazeCell {
     public void set_inMaze(){
         this.inMaze = true;
     }
+    public void set_isGoal(){
+        this.isGoal = true;
+    }
+    public void set_shortestPath(){
+        this.is_shortestPath = true;
+    }
+    public void set_points(int points){
+        this.points_val = points;
+    }
 
     //getters
     public int getRow(){
@@ -70,6 +85,15 @@ public class MazeCell {
     }
     public boolean get_visited(){
         return visited;
+    }
+    public boolean get_isGoal(){
+        return isGoal;
+    }
+    public boolean get_shortestPath(){
+        return is_shortestPath;
+    }
+    public int get_points(){
+        return points_val;
     }
 
 }
