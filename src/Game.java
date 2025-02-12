@@ -1,6 +1,7 @@
 import edu.usu.graphics.*;
 import org.joml.primitives.Circled;
 import org.joml.primitives.Circlef;
+import org.w3c.dom.Text;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -22,12 +23,15 @@ public class Game {
     private boolean show_credits;
     private boolean show_highscores;
 
-
+    private Texture leaf;
+    private Texture egg;
     public void initialize() {
         keypress = false;
         show_shortest_path = false;
         show_hint = false;
         show_crumbs = false;
+        leaf = new Texture("resources/images/leaf.png");
+        egg = new Texture("resources/images/dino_egg.png");
 
     }
 
@@ -46,6 +50,7 @@ public class Game {
             processInput(elapsedTime);
             update(elapsedTime);
             render(elapsedTime);
+
         }
     }
 
@@ -121,6 +126,25 @@ public class Game {
                 maze.update_shortest_path(player.getRow(),player.getCol());
             }
         }
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_B) == GLFW_PRESS) {
+            if(!keypress){
+                show_crumbs = !show_crumbs;
+                keypress = true;
+            }
+        }
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_P) == GLFW_PRESS) {
+            if (!keypress) {
+                show_shortest_path = !show_shortest_path;
+                keypress = true;
+            }
+        }
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_H) == GLFW_PRESS) {
+            if(!keypress){
+                show_hint = !show_hint;
+                keypress = true;
+            }
+        }
+
         else keypress = false;
 
     }
@@ -134,12 +158,12 @@ public class Game {
     private void render(double elapsedTime) {
         graphics.begin();
         Font font = new Font("Arial", java.awt.Font.PLAIN, 42, true);
-        graphics.drawTextByWidth(font, "F1 - New Game 5x5", -0.95f, -0.50f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "F2 - New Game 10x10", -0.95f, -0.45f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "F3 - New Game 15x15", -0.95f, -0.40f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "F4 - New Game 20x20", -0.95f, -0.35f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "F5 - Display High Scores", -0.95f, -0.3f, 0.4f, Color.WHITE);
-        graphics.drawTextByWidth(font, "F6 - Display Credits", -0.95f, -0.25f, 0.4f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F1 - New Game 5x5", -0.95f, -0.50f, 0.04f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F2 - New Game 10x10", -0.95f, -0.45f, 0.04f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F3 - New Game 15x15", -0.95f, -0.40f, 0.04f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F4 - New Game 20x20", -0.95f, -0.35f, 0.04f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F5 - Display High Scores", -0.95f, -0.3f, 0.04f, Color.WHITE);
+        graphics.drawTextByHeight(font, "F6 - Display Credits", -0.95f, -0.25f, 0.04f, Color.WHITE);
 
         if (player != null) {
             graphics.drawTextByHeight(font, "SCORE: "+player.getScore(), 0.55f, -0.5f, 0.05f, Color.WHITE);
@@ -165,8 +189,10 @@ public class Game {
             float top = MAZE_CORNER_TOP + player.getRow() * player.getSize();
             float size = player.getSize();
 
+
             Rectangle player = new Rectangle(left, top, size, size);
-            this.graphics.draw(player, Color.BLUE);
+            Texture dino = new Texture("resources/images/Pixel_Dino.png");
+            this.graphics.draw(dino,player, Color.BLUE);
         }
 
         graphics.end();
@@ -199,7 +225,7 @@ public class Game {
         }
 
 
-        if (cell.get_visited() && show_crumbs){
+        if (cell.get_playerVisited() && show_crumbs){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
             this.graphics.draw(r, Color.BLACK);
 
@@ -207,8 +233,17 @@ public class Game {
         }
         if (cell.get_shortestPath() && show_shortest_path){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
-            this.graphics.draw(r, Color.YELLOW);
+            this.graphics.draw(leaf,r, Color.WHITE);
 
+        } else if (cell.getHint() && show_hint){
+            Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
+            this.graphics.draw(leaf,r, Color.WHITE);
+
+        }
+
+        if (cell.get_isGoal()){
+            Rectangle r = new Rectangle(left+(CELL_SIZE/4),top+(CELL_SIZE/4),CELL_SIZE/2,CELL_SIZE/2);
+            this.graphics.draw(egg,r, Color.WHITE);
 
         }
     }

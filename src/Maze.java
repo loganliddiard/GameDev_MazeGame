@@ -54,7 +54,7 @@ public class Maze {
 
 
         while (!frontier.isEmpty()) {
-            System.out.println(frontier.size());
+
             MazeCell current = frontier.get(rand.nextInt(frontier.size()));
 
             current.set_inMaze();
@@ -106,6 +106,7 @@ public class Maze {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 maze[row][col].set_shortestPath(false);
+                maze[row][col].setHint(false);
             }
         }
 
@@ -124,9 +125,6 @@ public class Maze {
             curr.setVisited();
 
             if (curr.get_isGoal()) {
-                System.out.println("FOUND GOAL");
-                System.out.println(curr.getCol());
-                System.out.println(curr.getRow());
 
                 // Backtrack and mark the shortest path
                 markShortestPath(predecessors, curr);
@@ -153,8 +151,13 @@ public class Maze {
     // Backtrack from goal to start and mark the shortest path
     private void markShortestPath(Map<MazeCell, MazeCell> predecessors, MazeCell goal) {
         MazeCell curr = goal;
+
         while (curr != null) {
             curr.set_shortestPath(true); // Assuming a method exists to visually mark the shortest path
+            // The first step towards the goal is the last predecessor before reaching the start
+            if (predecessors.get(curr) != null && predecessors.get(predecessors.get(curr)) == null) {
+                curr.setHint(true);
+            }
             curr = predecessors.get(curr);
         }
     }
@@ -196,7 +199,6 @@ public class Maze {
 
 
     public MazeCell[][] getMaze(){
-
         return maze;
     }
 

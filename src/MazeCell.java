@@ -16,11 +16,13 @@ public class MazeCell {
     private boolean inMaze;
     private boolean isGoal;
     private boolean is_shortestPath;
+    private boolean isHint;
     public MazeCell(int row, int col){
         this.row = row;
         this.col = col;
         inMaze = false;
         isGoal = false;
+        isHint = false;
         is_shortestPath = false;
         points_val = 0;
 
@@ -63,6 +65,10 @@ public class MazeCell {
     public void set_playerVisited(){
         this.player_visited = true;
     }
+    public void setHint(boolean hint){
+        this.isHint = hint;
+    }
+
 
     //getters
     public int getRow(){
@@ -102,6 +108,9 @@ public class MazeCell {
     }
     public int get_points(){
         return points_val;
+    }
+    public boolean getHint(){
+        return isHint;
     }
 
 }

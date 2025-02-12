@@ -10,6 +10,7 @@ public class Player {
     private boolean go_right;
     private boolean go_up;
     private boolean go_down;
+    private boolean finished;
     private float size;
     private int score;
     private MazeCell current_cell;
@@ -17,12 +18,13 @@ public class Player {
 
     private double start_time;
     public Player(float size,MazeCell[][] maze,double start_time){
-        col = 1;
-        row = 1;
+        col = 0;
+        row = 0;
         go_left = false;
         go_right = false;
         go_up = false;
         go_down = false;
+        finished = false;
 
         this.start_time = start_time;
         total_time = 0;
@@ -65,38 +67,42 @@ public class Player {
     }
 
     public void move_player_left(){
-        if(go_left){
+        if(go_left && !finished){
             current_cell.set_playerVisited();
             col -=1;
             current_cell = maze[row][col];
             if (!current_cell.get_playerVisited()) score += current_cell.get_points();
+            if (current_cell.get_isGoal()) finished = true;
             check_moves();
         }
     }
     public void move_player_right() {
-        if (go_right) {
+        if (go_right && !finished) {
             current_cell.set_playerVisited();
             col += 1;
             current_cell = maze[row][col];
             if (!current_cell.get_playerVisited()) score += current_cell.get_points();
+            if (current_cell.get_isGoal()) finished = true;
             check_moves();
         }
     }
     public void move_player_up(){
-        if(go_up){
+        if(go_up && !finished){
             current_cell.set_playerVisited();
             row -=1;
             current_cell = maze[row][col];
             if (!current_cell.get_playerVisited()) score += current_cell.get_points();
+            if (current_cell.get_isGoal()) finished = true;
             check_moves();
         }
     }
     public void move_player_down(){
-        if(go_down){
+        if(go_down && !finished){
             current_cell.set_playerVisited();
             row +=1;
             current_cell = maze[row][col];
             if (!current_cell.get_playerVisited()) score += current_cell.get_points();
+            if (current_cell.get_isGoal()) finished = true;
             check_moves();
         }
     }
@@ -113,12 +119,10 @@ public class Player {
         return score;
     }
     public void update_timer(double elapsed_time){
-        total_time += elapsed_time;
+        if(!finished) total_time += elapsed_time;
     }
     public double getTime(){
 
         return total_time;
     }
-
 }
-
