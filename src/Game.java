@@ -23,16 +23,22 @@ public class Game {
     private boolean show_credits;
     private boolean show_highscores;
 
+    private Texture dino;
     private Texture leaf;
     private Texture egg;
+    Texture background;
+    Font font;
+
     public void initialize() {
         keypress = false;
         show_shortest_path = false;
         show_hint = false;
         show_crumbs = false;
+        dino = new Texture("resources/images/Pixel_Dino.png");
         leaf = new Texture("resources/images/leaf.png");
         egg = new Texture("resources/images/dino_egg.png");
-
+        background = new Texture("resources/images/Dino_background.2.jpg");
+        font = new Font("Arial", java.awt.Font.PLAIN, 42, true);
     }
 
     public void shutdown() {
@@ -157,7 +163,6 @@ public class Game {
 
     private void render(double elapsedTime) {
         graphics.begin();
-        Font font = new Font("Arial", java.awt.Font.PLAIN, 42, true);
         graphics.drawTextByHeight(font, "F1 - New Game 5x5", -0.95f, -0.50f, 0.04f, Color.WHITE);
         graphics.drawTextByHeight(font, "F2 - New Game 10x10", -0.95f, -0.45f, 0.04f, Color.WHITE);
         graphics.drawTextByHeight(font, "F3 - New Game 15x15", -0.95f, -0.40f, 0.04f, Color.WHITE);
@@ -167,14 +172,13 @@ public class Game {
 
         if (player != null) {
             graphics.drawTextByHeight(font, "SCORE: "+player.getScore(), 0.55f, -0.5f, 0.05f, Color.WHITE);
-            System.out.println(player.getScore());
             graphics.drawTextByHeight(font, "TIME: "+String.format("%.1f", player.getTime()), 0.55f, -0.45f, 0.05f, Color.WHITE);
         }
 
 
 
         Rectangle myBox = new Rectangle(-0.525f, -0.525f, 1.05f, 1.05f,-1);
-        Texture background = new Texture("resources/images/Dino_background.2.jpg");
+
 
         final float MAZE_CORNER_LEFT = -0.5f;
         final float MAZE_CORNER_TOP = -0.5f;
@@ -191,7 +195,7 @@ public class Game {
 
 
             Rectangle player = new Rectangle(left, top, size, size);
-            Texture dino = new Texture("resources/images/Pixel_Dino.png");
+
             this.graphics.draw(dino,player, Color.BLUE);
         }
 
@@ -233,7 +237,7 @@ public class Game {
         }
         if (cell.get_shortestPath() && show_shortest_path){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
-            this.graphics.draw(leaf,r, Color.WHITE);
+            this.graphics.draw(leaf,r, Color.PURPLE);
 
         } else if (cell.getHint() && show_hint){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
