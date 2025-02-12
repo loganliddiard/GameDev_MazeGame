@@ -16,10 +16,19 @@ public class Game {
         this.graphics = graphics;
     }
 
+    private boolean show_shortest_path;
+    private boolean show_hint;
+    private boolean show_crumbs;
+    private boolean show_credits;
+    private boolean show_highscores;
 
 
     public void initialize() {
-        boolean keypress = false;
+        keypress = false;
+        show_shortest_path = false;
+        show_hint = false;
+        show_crumbs = false;
+
     }
 
     public void shutdown() {
@@ -44,6 +53,7 @@ public class Game {
         // Poll for window events: required in order for window, keyboard, etc events are captured.
         glfwPollEvents();
 
+
         // If user presses ESC, then exit the program
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(graphics.getWindow(), true);
@@ -52,21 +62,21 @@ public class Game {
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F1) == GLFW_PRESS) {
             maze = new Maze(5);
             cell_size = 5.0f;
-            player = new Player(1 / cell_size,maze.getMaze());
+            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
 
         }
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F2) == GLFW_PRESS) {
 
             maze = new Maze(10);
             cell_size = 10.0f;
-            player = new Player(1 / cell_size,maze.getMaze());
+            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
 
         }
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F3) == GLFW_PRESS) {
 
             maze = new Maze(15);
             cell_size = 15.0f;
-            player = new Player(1 / cell_size,maze.getMaze());
+            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
 
         }
         if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F4) == GLFW_PRESS) {
@@ -74,7 +84,7 @@ public class Game {
             maze = new Maze(20);
 
             cell_size = 20.0f;
-            player = new Player(1 / cell_size,maze.getMaze());
+            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
         }
 
         // Movement handeler
@@ -117,10 +127,27 @@ public class Game {
 
     private void update(double elapsedTime) {
 
+        if (player != null) player.update_timer(elapsedTime);
+
     }
 
     private void render(double elapsedTime) {
         graphics.begin();
+        Font font = new Font("Arial", java.awt.Font.PLAIN, 42, true);
+        graphics.drawTextByWidth(font, "F1 - New Game 5x5", -0.95f, -0.50f, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F2 - New Game 10x10", -0.95f, -0.45f, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F3 - New Game 15x15", -0.95f, -0.40f, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F4 - New Game 20x20", -0.95f, -0.35f, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F5 - Display High Scores", -0.95f, -0.3f, 0.4f, Color.WHITE);
+        graphics.drawTextByWidth(font, "F6 - Display Credits", -0.95f, -0.25f, 0.4f, Color.WHITE);
+
+        if (player != null) {
+            graphics.drawTextByHeight(font, "SCORE: "+player.getScore(), 0.55f, -0.5f, 0.05f, Color.WHITE);
+            System.out.println(player.getScore());
+            graphics.drawTextByHeight(font, "TIME: "+String.format("%.1f", player.getTime()), 0.55f, -0.45f, 0.05f, Color.WHITE);
+        }
+
+
 
         Rectangle myBox = new Rectangle(-0.525f, -0.525f, 1.05f, 1.05f,-1);
         Texture background = new Texture("resources/images/Dino_background.2.jpg");
@@ -171,13 +198,14 @@ public class Game {
             this.graphics.draw(r, Color.BLACK);
         }
 
-        if (cell.get_visited()){
+
+        if (cell.get_visited() && show_crumbs){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
             this.graphics.draw(r, Color.BLACK);
 
 
         }
-        if (cell.get_shortestPath()){
+        if (cell.get_shortestPath() && show_shortest_path){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
             this.graphics.draw(r, Color.YELLOW);
 

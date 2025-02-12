@@ -13,7 +13,10 @@ public class Player {
     private float size;
     private int score;
     private MazeCell current_cell;
-    public Player(float size,MazeCell[][] maze){
+    private double total_time;
+
+    private double start_time;
+    public Player(float size,MazeCell[][] maze,double start_time){
         col = 1;
         row = 1;
         go_left = false;
@@ -21,9 +24,12 @@ public class Player {
         go_up = false;
         go_down = false;
 
+        this.start_time = start_time;
+        total_time = 0;
         this.maze = maze;
         this.size = size;
 
+        score = 0;
         current_cell = this.maze[row][col];
         check_moves();
     }
@@ -31,9 +37,6 @@ public class Player {
     //check where we can move when moving to a new cell
     public void check_moves(){
 
-        System.out.println("CURRENT LOCATION:");
-        System.out.println("Row:"+row);
-        System.out.println("Col:"+col);
         go_left = false;
         go_right = false;
         go_up = false;
@@ -63,41 +66,37 @@ public class Player {
 
     public void move_player_left(){
         if(go_left){
-            current_cell.setVisited();
+            current_cell.set_playerVisited();
             col -=1;
             current_cell = maze[row][col];
-            if (!current_cell.get_visited()) score += current_cell.get_points();
-            System.out.println("POINTS GAINED"+current_cell.get_points());
+            if (!current_cell.get_playerVisited()) score += current_cell.get_points();
             check_moves();
         }
     }
     public void move_player_right() {
         if (go_right) {
-            current_cell.setVisited();
+            current_cell.set_playerVisited();
             col += 1;
             current_cell = maze[row][col];
-            if (!current_cell.get_visited()) score += current_cell.get_points();
-            System.out.println("POINTS GAINED"+current_cell.get_points());
+            if (!current_cell.get_playerVisited()) score += current_cell.get_points();
             check_moves();
         }
     }
     public void move_player_up(){
         if(go_up){
-            current_cell.setVisited();
+            current_cell.set_playerVisited();
             row -=1;
             current_cell = maze[row][col];
-            if (!current_cell.get_visited()) score += current_cell.get_points();
-
+            if (!current_cell.get_playerVisited()) score += current_cell.get_points();
             check_moves();
         }
     }
     public void move_player_down(){
         if(go_down){
-            current_cell.setVisited();
+            current_cell.set_playerVisited();
             row +=1;
             current_cell = maze[row][col];
-            if (!current_cell.get_visited()) score += current_cell.get_points();
-
+            if (!current_cell.get_playerVisited()) score += current_cell.get_points();
             check_moves();
         }
     }
@@ -110,5 +109,16 @@ public class Player {
     public float getSize(){
         return size;
     }
+    public int getScore(){
+        return score;
+    }
+    public void update_timer(double elapsed_time){
+        total_time += elapsed_time;
+    }
+    public double getTime(){
+
+        return total_time;
+    }
+
 }
 
