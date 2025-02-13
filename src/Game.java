@@ -128,7 +128,9 @@ public class Game {
         }
 
         // Movement handeler
-        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_W) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_I) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_UP) == GLFW_PRESS) {
             if(!keypress && player!= null){
                 player.move_player_up();
                 keypress = true;
@@ -137,7 +139,9 @@ public class Game {
             }
 
         }
-        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_S) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_K) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
             if(!keypress && player!= null){
                 player.move_player_down();
                 keypress = true;
@@ -146,14 +150,18 @@ public class Game {
             }
 
         }
-        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_A) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_J) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
             if(!keypress && player!= null){
                 player.move_player_left();
                 keypress = true;
                 maze.update_shortest_path(player.getRow(),player.getCol());
             }
         }
-        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_L) == GLFW_PRESS ||
+                glfwGetKey(graphics.getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
 
             if(!keypress && player!= null){
                 player.move_player_right();
@@ -207,11 +215,11 @@ public class Game {
         }
 
         if(show_credits){
-            graphics.drawTextByHeight(font, "-- CREDITS --", -0.95f, -0.1f, 0.04f, Color.WHITE);
-            graphics.drawTextByHeight(font, "Devloper - Logan Liddiard", -0.95f, -0.05f, 0.04f, Color.WHITE);
-            graphics.drawTextByHeight(font, "Background - Freepic.com", -0.95f, -0.00f, 0.04f, Color.WHITE);
-            graphics.drawTextByHeight(font, "Dino Asset - Freepic.com", -0.95f, 0.05f, 0.04f, Color.WHITE);
-            graphics.drawTextByHeight(font, "Other Asset- Logan Liddiard", -0.95f, 0.1f, 0.03f, Color.WHITE);
+            graphics.drawTextByHeight(font, "-- CREDITS --", -0.95f, -0.1f, 0.03f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Devloper     - Logan Liddiard", -0.95f, -0.05f, 0.03f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Background   - Freepic.com", -0.95f, -0.00f, 0.03f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Dino Asset   - Freepic.com", -0.95f, 0.05f, 0.03f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Other Assets - Logan Liddiard", -0.95f, 0.1f, 0.03f, Color.WHITE);
 
         }
 
