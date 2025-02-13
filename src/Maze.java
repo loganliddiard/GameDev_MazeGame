@@ -47,23 +47,22 @@ public class Maze {
     private void generateMaze() {
 
         MazeCell start = maze[0][0];
-
         start.set_inMaze();
         ArrayList<MazeCell> start_neighbor_cells = get_valid_cells(start);
         List<MazeCell> frontier = new ArrayList<>(start_neighbor_cells);
 
-
         while (!frontier.isEmpty()) {
 
+            // Randomly select a cell from the frontier
             MazeCell current = frontier.get(rand.nextInt(frontier.size()));
-
             current.set_inMaze();
 
+            // Get valid neighboring cells
             ArrayList<MazeCell> valid_cells = get_valid_cells(current);
             ArrayList<MazeCell> neighbors = new ArrayList<>();
 
+            // Add valid frontier cells to the frontier, and neighbors to connect
             for (MazeCell cell : valid_cells) {
-
                 if (!cell.get_inMaze() && !frontier.contains(cell)) {
                     frontier.add(cell);
                 } else if (cell.get_inMaze()) {
@@ -71,34 +70,26 @@ public class Maze {
                 }
             }
 
-
-            //randomly pick frontier neighbor cell
+            // Randomly pick a neighbor from the valid neighbors
             if (!neighbors.isEmpty()) {
-
                 int randomIndex = rand.nextInt(neighbors.size());
                 MazeCell cell_to_connect = neighbors.get(randomIndex);
 
-                //Locate cell to properly connect them
-
-                //Connect above
+                // Connect cells based on their relative positions
                 if (cell_to_connect.getRow() < current.getRow()) {
                     current.connect_upper_cell(cell_to_connect);
-                }
-                //Connect below
-                else if (cell_to_connect.getRow() > current.getRow())
+                } else if (cell_to_connect.getRow() > current.getRow()) {
                     current.connect_bottom_cell(cell_to_connect);
-                    //Connect right
-                else if (cell_to_connect.getCol() > current.getCol())
+                } else if (cell_to_connect.getCol() > current.getCol()) {
                     current.connect_right_cell(cell_to_connect);
-                    //Connect left
-                else if (cell_to_connect.getCol() < current.getCol())
+                } else if (cell_to_connect.getCol() < current.getCol()) {
                     current.connect_left_cell(cell_to_connect);
-
+                }
             }
+
+            // Remove current from frontier
             frontier.remove(current);
         }
-
-
     }
 
     private void shortest_path(int given_row, int given_col) {
@@ -201,6 +192,7 @@ public class Maze {
     public MazeCell[][] getMaze(){
         return maze;
     }
+    public int getSize() {return size;}
 
     public void update_shortest_path(int row, int col){
         shortest_path(row,col);

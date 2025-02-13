@@ -10,6 +10,7 @@ public class Game {
 
     private Maze maze;
     private Player player;
+    private Scores scores;
     private long time;
     private float cell_size;
     private boolean keypress;
@@ -26,18 +27,22 @@ public class Game {
     private Texture dino;
     private Texture leaf;
     private Texture egg;
-    Texture background;
-    Font font;
+    private Texture footprints;
+    private Texture background;
+    private Font font;
 
     public void initialize() {
         keypress = false;
         show_shortest_path = false;
         show_hint = false;
         show_crumbs = false;
+        show_highscores = true;
+        scores = new Scores();
         dino = new Texture("resources/images/Pixel_Dino.png");
         leaf = new Texture("resources/images/leaf.png");
         egg = new Texture("resources/images/dino_egg.png");
         background = new Texture("resources/images/Dino_background.2.jpg");
+        footprints = new Texture("resources/images/footprints.png");
         font = new Font("Arial", java.awt.Font.PLAIN, 42, true);
     }
 
@@ -70,37 +75,61 @@ public class Game {
             glfwSetWindowShouldClose(graphics.getWindow(), true);
         }
         // Maze size handler
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F1) == GLFW_PRESS) {
-            maze = new Maze(5);
-            cell_size = 5.0f;
-            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F1) == GLFW_PRESS) {
+            if(!keypress){
+                maze = new Maze(5);
+                cell_size = 5.0f;
+                player = new Player(1 / cell_size,maze.getMaze(),elapsedTime,scores);
+                keypress = true;
+            }
+        }
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F2) == GLFW_PRESS) {
+
+            if(!keypress){
+                maze = new Maze(10);
+                cell_size = 10.0f;
+                player = new Player(1 / cell_size,maze.getMaze(),elapsedTime,scores);
+                keypress = true;
+            }
+
 
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F2) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F3) == GLFW_PRESS) {
 
-            maze = new Maze(10);
-            cell_size = 10.0f;
-            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
-
+            if (!keypress){
+                maze = new Maze(15);
+                cell_size = 15.0f;
+                player = new Player(1 / cell_size,maze.getMaze(),elapsedTime,scores);
+                keypress = true;
+            }
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F3) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F4) == GLFW_PRESS) {
 
-            maze = new Maze(15);
-            cell_size = 15.0f;
-            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
-
+            if(!keypress){
+                maze = new Maze(20);
+                cell_size = 20.0f;
+                player = new Player(1 / cell_size,maze.getMaze(),elapsedTime,scores);
+                keypress = true;
+            }
         }
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F4) == GLFW_PRESS) {
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F5) == GLFW_PRESS) {
 
-            maze = new Maze(20);
+            if(!keypress){
+                    show_highscores = !show_highscores;
+                    keypress = true;
+            }
+        }
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_F6) == GLFW_PRESS) {
 
-            cell_size = 20.0f;
-            player = new Player(1 / cell_size,maze.getMaze(),elapsedTime);
+            if(!keypress){
+                show_credits = !show_credits;
+                keypress = true;
+            }
         }
 
         // Movement handeler
-        if (glfwGetKey(graphics.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-            if(!keypress){
+        else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+            if(!keypress && player!= null){
                 player.move_player_up();
                 keypress = true;
                 maze.update_shortest_path(player.getRow(),player.getCol());
@@ -109,7 +138,7 @@ public class Game {
 
         }
         else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-            if(!keypress){
+            if(!keypress && player!= null){
                 player.move_player_down();
                 keypress = true;
                 maze.update_shortest_path(player.getRow(),player.getCol());
@@ -118,7 +147,7 @@ public class Game {
 
         }
         else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-            if(!keypress){
+            if(!keypress && player!= null){
                 player.move_player_left();
                 keypress = true;
                 maze.update_shortest_path(player.getRow(),player.getCol());
@@ -126,7 +155,7 @@ public class Game {
         }
         else if (glfwGetKey(graphics.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
 
-            if(!keypress){
+            if(!keypress && player!= null){
                 player.move_player_right();
                 keypress = true;
                 maze.update_shortest_path(player.getRow(),player.getCol());
@@ -157,7 +186,9 @@ public class Game {
 
     private void update(double elapsedTime) {
 
-        if (player != null) player.update_timer(elapsedTime);
+        if (player != null) {
+            player.update_player(elapsedTime);
+        }
 
     }
 
@@ -173,6 +204,27 @@ public class Game {
         if (player != null) {
             graphics.drawTextByHeight(font, "SCORE: "+player.getScore(), 0.55f, -0.5f, 0.05f, Color.WHITE);
             graphics.drawTextByHeight(font, "TIME: "+String.format("%.1f", player.getTime()), 0.55f, -0.45f, 0.05f, Color.WHITE);
+        }
+
+        if(show_credits){
+            graphics.drawTextByHeight(font, "-- CREDITS --", -0.95f, -0.1f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Devloper - Logan Liddiard", -0.95f, -0.05f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Background - Freepic.com", -0.95f, -0.00f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Dino Asset - Freepic.com", -0.95f, 0.05f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "Other Asset- Logan Liddiard", -0.95f, 0.1f, 0.03f, Color.WHITE);
+
+        }
+
+        if (show_highscores){
+            int size = 0;
+            if(maze != null) size = (maze.getSize()/5)-1;
+            int maze_size = (size*5 +5);
+            graphics.drawTextByHeight(font, "High Scores for Maze "+maze_size+"x"+maze_size, 0.55f, -0.40f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "#1 - Score "+scores.get_score(size,0)+" Time: "+scores.get_time(size,0), 0.55f, -0.35f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "#2 - Score "+scores.get_score(size,1)+" Time: "+scores.get_time(size,1), 0.55f, -0.31f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "#3 - Score "+scores.get_score(size,2)+" Time: "+scores.get_time(size,2), 0.55f, -0.27f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "#4 - Score "+scores.get_score(size,3)+" Time: "+scores.get_time(size,3), 0.55f, -0.23f, 0.04f, Color.WHITE);
+            graphics.drawTextByHeight(font, "#5 - Score "+scores.get_score(size,4)+" Time: "+scores.get_time(size,4), 0.55f, -0.19f, 0.04f, Color.WHITE);
         }
 
 
@@ -231,13 +283,13 @@ public class Game {
 
         if (cell.get_playerVisited() && show_crumbs){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
-            this.graphics.draw(r, Color.BLACK);
+            this.graphics.draw(footprints,r, Color.BLACK);
 
 
         }
         if (cell.get_shortestPath() && show_shortest_path){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);
-            this.graphics.draw(leaf,r, Color.PURPLE);
+            this.graphics.draw(leaf,r, Color.WHITE);
 
         } else if (cell.getHint() && show_hint){
             Rectangle r = new Rectangle(left+(CELL_SIZE/3),top+(CELL_SIZE/3),CELL_SIZE/3,CELL_SIZE/3);

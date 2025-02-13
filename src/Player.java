@@ -11,13 +11,16 @@ public class Player {
     private boolean go_up;
     private boolean go_down;
     private boolean finished;
+    private boolean needs_scoring;
+
     private float size;
     private int score;
     private MazeCell current_cell;
     private double total_time;
+    private Scores score_keeper;
 
     private double start_time;
-    public Player(float size,MazeCell[][] maze,double start_time){
+    public Player(float size,MazeCell[][] maze,double start_time,Scores score_keeper){
         col = 0;
         row = 0;
         go_left = false;
@@ -25,6 +28,9 @@ public class Player {
         go_up = false;
         go_down = false;
         finished = false;
+        needs_scoring = true;
+
+        this.score_keeper=score_keeper;
 
         this.start_time = start_time;
         total_time = 0;
@@ -118,8 +124,14 @@ public class Player {
     public int getScore(){
         return score;
     }
-    public void update_timer(double elapsed_time){
+    public void update_player(double elapsed_time){
         if(!finished) total_time += elapsed_time;
+        else if (finished && needs_scoring){
+            needs_scoring = false;
+            double rounded_time = Math.round(total_time * 10.0) / 10.0;
+            score_keeper.check_score(((maze.length)/5)-1,score,rounded_time);
+
+        }
     }
     public double getTime(){
 
